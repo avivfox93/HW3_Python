@@ -1,5 +1,6 @@
 import tkinter as tk
 import matplotlib.pyplot as plt
+import threading
 import Words
 
 message = 'Please Enter Char \nand Press Start'
@@ -64,15 +65,16 @@ class BottomWindow:
         return self._character.get()
 
     def _update_word(self):
-        if not self._running:
-            return
         try:
-            self._word.set(next(self._words))
+            word = next(self._words)
+            if not self._running:
+                return
+            self._word.set(word)
         except StopIteration:
             self._running = False
             self._words = None
             return
-        self._label.after(1000, self._update_word)
+        self._update_word()
 
     def _stop_words(self):
         self._running = False
@@ -85,7 +87,9 @@ class BottomWindow:
                 return
             self._words = Words.word_generator(self._get_char(), self._include.get())
         self._running = True
-        self._update_word()
+        t = threading.Thread(target=self._update_word)
+        t.setDaemon(True)
+        t.start()
 
 
 class TopWindow:

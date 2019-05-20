@@ -1,3 +1,4 @@
+import time
 
 
 def _word_file():
@@ -8,10 +9,12 @@ def word_generator(char, include):
     file = _word_file()
     for line in file:
         for word in line.split(','):
-            if include and word.lower().startswith(char.lower()):
+            if include and (char.lower() in word.lower()):
                 yield word
-            elif (not include) and (not word.lower().startswith(char.lower())):
+                time.sleep(1)
+            elif (not include) and (not (char.lower() in word.lower())):
                 yield word
+                time.sleep(1)
     file.close()
 
 
