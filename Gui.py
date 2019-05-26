@@ -141,18 +141,19 @@ class TopWindow:
         amount.pack(pady=5, padx=5)
 
         def callback():
+            alert = tk.Toplevel(window)
             to = None
             for a in self.accounts:
                 if a.name == accounts.selection_get():
                     to = a
                     break
             if not to or not amount_var.get().isnumeric():
+                tk.Label(alert, text='Illegal input!').pack(pady=5, padx=5)
                 return
             if self.accounts[self._index].transfer(int(amount_var.get()), to=to):
                 self._update()
                 window.destroy()
             else:
-                alert = tk.Toplevel(window)
                 tk.Label(alert, text='insufficient Funds!').pack(pady=5, padx=5)
         tk.Button(window, text='OK', command=callback).pack(pady=5, padx=5)
 
